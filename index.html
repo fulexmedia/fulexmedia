@@ -253,7 +253,6 @@
       min-height: 100svh;
       display: flex; flex-direction: column; justify-content: center;
       padding-top: 100px; padding-bottom: 5rem;
-      position: relative;
     }
     .hero-badge {
       display: inline-flex; align-items: center; gap: 8px;
@@ -286,9 +285,9 @@
     .hero-h em { font-style: normal; color: var(--accent); }
 
     .hero-sub {
-      font-size: clamp(.95rem,2vw,1.1rem);
-      color: var(--muted); max-width: 500px;
-      margin-bottom: 2.25rem; line-height: 1.75;
+      font-size: clamp(.875rem,2vw,1.1rem);
+      color: var(--muted); max-width: 500px; width: 100%;
+      margin-bottom: 2.25rem; line-height: 1.7;
       animation: fadeUp 1s .45s both;
     }
     .hero-acts { display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; animation: fadeUp 1s .6s both; }
@@ -340,22 +339,18 @@
 
     /* XY growth chart */
     .growth-wrap {
-      margin-top: 3rem; max-width: 480px;
+      margin-top: 1.5rem; max-width: 680px; width: 100%;
       background: var(--bg2); border: 1px solid var(--border);
       border-radius: var(--r); padding: 1.25rem 1.5rem;
       animation: fadeUp 1s .9s both;
+      box-sizing: border-box;
     }
     .growth-header {
       display: flex; align-items: center; justify-content: space-between;
       margin-bottom: 1rem;
     }
     .growth-title { font-size: .75rem; font-weight: 500; color: var(--muted); }
-    .growth-badge {
-      font-family: var(--ff-h); font-size: .85rem; letter-spacing: .08em;
-      color: #080808; background: var(--accent);
-      padding: 2px 9px; border-radius: 4px;
-    }
-    .growth-chart { height: 140px; }
+    .growth-chart { height: 140px; width: 100%; overflow: hidden; }
 
     #growth-line {
       stroke-dasharray: 600;
@@ -366,40 +361,33 @@
     .gpt { opacity: 0; }
     #rocket-end { opacity: 0; }
     #rocket-end.flyaway {
-      animation: rocketFlyAway .7s cubic-bezier(.55,0,.7,.9) forwards;
+      animation: rocketFlyAway .8s cubic-bezier(.55,0,.7,.9) forwards;
     }
     @keyframes rocketFlyAway {
       0%   { opacity: 1; transform: translate(0,0) rotate(0deg); transform-origin: 316px 8px; }
-      100% { opacity: 0; transform: translate(30px,-80px) rotate(25deg); transform-origin: 316px 8px; }
+      100% { opacity: 0; transform: translate(40px,-100px) rotate(20deg); transform-origin: 316px 8px; }
     }
-
-    .growth-footer {
-      display: flex; align-items: center; gap: 0;
-      margin-top: 1rem; padding-top: 1rem;
-      border-top: 1px solid var(--border);
+    .flame {
+      animation: flameFlicker .25s ease-in-out infinite alternate;
+      transform-origin: 316px 22px;
     }
-    .growth-stat { display: flex; flex-direction: column; gap: 1px; flex: 1; }
-    .gs-num {
-      font-family: var(--ff-h); font-size: 1.3rem; letter-spacing: .04em;
-      color: var(--accent); line-height: 1;
+    @keyframes flameFlicker {
+      0%   { transform: scaleY(1)   scaleX(1);   opacity: 1; }
+      100% { transform: scaleY(.7)  scaleX(.85); opacity: .7; }
     }
-    .gs-lbl { font-size: .68rem; color: var(--muted); }
-    .growth-divider { width: 1px; height: 32px; background: var(--border); margin: 0 .75rem; flex-shrink: 0; }
 
     .scroll-arrow {
-      position: absolute; bottom: 2.5rem; left: 50%;
-      transform: translateX(-50%);
-      display: flex; flex-direction: column; align-items: center; gap: 4px;
+      display: flex; align-items: center; justify-content: center;
+      width: 680px; max-width: 100%;
+      margin-top: 1.5rem;
       animation: fadeUp 1s 1.2s both;
       cursor: pointer;
     }
-    .scroll-arrow svg {
-      animation: scrollBounce 1.8s ease-in-out infinite;
-    }
+    .scroll-arrow svg { animation: scrollBounce 1.8s ease-in-out infinite; }
     .scroll-arrow.hidden { opacity: 0; pointer-events: none; transition: opacity .3s; }
     @keyframes scrollBounce {
       0%,100% { transform: translateY(0); }
-      50%      { transform: translateY(7px); }
+      50%      { transform: translateY(8px); }
     }
 
     /* ─── MARQUEE ────────────────────────────────────────── */
@@ -738,11 +726,12 @@
       .frow { grid-template-columns: 1fr; }
       .fi { flex-direction: column; align-items: flex-start; }
       #hero { padding-top: 80px; padding-bottom: 4rem; }
+      .hero-sub { max-width: 100%; }
       .hero-acts { gap: .6rem; }
-      .btnp { font-size: .8rem; padding: 11px 16px; }
-      .btng-pill { font-size: .8rem; padding: 11px 16px; }
-      .viral-rocket-wrap { max-width: 100%; margin-top: 2rem; }
-      .scroll-arrow { bottom: 1.25rem; }
+      .btnp { font-size: .78rem; padding: 10px 14px; }
+      .btng-pill { font-size: .78rem; padding: 10px 14px; }
+      .growth-wrap { display: none; }
+      .scroll-arrow { display: none; }
     }
 
     /* ─── HERO GREEN FADE ────────────────────────────────── */
@@ -863,7 +852,7 @@
     <!-- XY growth chart -->
     <div class="growth-wrap" id="growth-wrap">
       <div class="growth-header">
-        <span class="growth-title">Reichweite durch Content Consistency</span>
+        <span class="growth-title">Reichweite durch Kontinuität</span>
       </div>
       <div class="growth-chart">
         <svg id="growth-svg" viewBox="0 0 320 140" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;overflow:visible">
@@ -893,15 +882,29 @@
           <circle class="gpt" cx="204" cy="50"  r="3" fill="#c9f542" opacity="0"/>
           <circle class="gpt" cx="260" cy="12"  r="3" fill="#c9f542" opacity="0"/>
           <g id="rocket-end" opacity="0">
-            <text id="rocket-emoji" x="316" y="8" text-anchor="middle" font-size="14">&#x1F680;</text>
+            <!-- rocket body -->
+            <ellipse cx="316" cy="4" rx="5" ry="8" fill="#c9f542"/>
+            <!-- nose -->
+            <polygon points="316,-4 311,4 321,4" fill="#c9f542"/>
+            <!-- wings -->
+            <polygon points="311,8 307,14 311,12" fill="rgba(201,245,66,0.6)"/>
+            <polygon points="321,8 325,14 321,12" fill="rgba(201,245,66,0.6)"/>
+            <!-- window -->
+            <circle cx="316" cy="4" r="2" fill="#080808"/>
+            <!-- flame -->
+            <g class="flame">
+              <ellipse cx="316" cy="16" rx="3" ry="5" fill="#ff8c00" opacity=".9"/>
+              <ellipse cx="316" cy="17" rx="1.8" ry="3.5" fill="#ffcc00"/>
+              <ellipse cx="316" cy="18" rx=".8" ry="2" fill="#ffffff" opacity=".6"/>
+            </g>
           </g>
         </svg>
       </div>
     </div>
 
-    <!-- scroll indicator -->
+    <!-- scroll arrow — centered below graph -->
     <div class="scroll-arrow" id="scroll-arrow">
-      <svg width="18" height="18" fill="none" stroke="#c9f542" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+      <svg width="32" height="32" fill="none" stroke="#c9f542" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
     </div>
   </div>
 </section>
@@ -1042,7 +1045,7 @@
           </div>
         </div>
         <div class="tbody">
-          <h3>KASPAR BENTHE</h3>
+          <h3>VORNAME NAME</h3>
           <div class="trole">Gründer &amp; Creative Director</div>
           <p>Ich brenne für visuelles Storytelling. Mit der Kamera aufgewachsen, weiß ich wie man Marken so in Szene setzt, dass Menschen wirklich hinschauen — und bleiben.</p>
           <div class="tsoc">
@@ -1378,7 +1381,7 @@
       document.getElementById('leistungen').scrollIntoView({ behavior: 'smooth' });
     });
     window.addEventListener('scroll', () => {
-      if (window.scrollY > 80) scrollArrow.classList.add('hidden');
+      if (window.scrollY > 120) scrollArrow.classList.add('hidden');
       else scrollArrow.classList.remove('hidden');
     }, { passive: true });
   }
