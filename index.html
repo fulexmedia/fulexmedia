@@ -83,10 +83,8 @@
       background: #080808;
       display: flex; align-items: center; justify-content: center;
       pointer-events: none;
-      transition: opacity .7s ease, transform .7s ease;
     }
     #page-intro.done { display: none; }
-    #page-intro.fade-out { opacity: 0; transform: scale(1.03); }
 
     #intro-wrap {
       position: relative;
@@ -100,35 +98,25 @@
       from { opacity: 0; transform: translateY(20px); }
       to   { opacity: 1; transform: none; }
     }
-
-    #intro-arrow-overlay {
-      position: absolute;
-      left: 49.5%; top: 63%;
-      transform: translateX(-50%);
-      width: 3.5%;
-      aspect-ratio: 1/2.2;
-      background: #c9f542;
-      clip-path: polygon(50% 0%, 100% 35%, 72% 35%, 72% 100%, 28% 100%, 28% 35%, 0% 35%);
-      opacity: 0;
-      animation: arrowAppear .4s ease .8s both;
+    #intro-img.launch {
+      animation: logoLaunch .7s cubic-bezier(.55,0,.7,.9) forwards;
     }
-    #intro-arrow-overlay.launch {
-      animation: arrowLaunch .6s cubic-bezier(.22,.68,0,1.2) forwards;
+    @keyframes logoLaunch {
+      0%   { transform: translateY(0);     filter: brightness(1) saturate(1); opacity: 1; }
+      30%  { transform: translateY(-20px); filter: brightness(2) saturate(0) sepia(1) hue-rotate(40deg) brightness(3); opacity: 1; }
+      100% { transform: translateY(-120px); filter: brightness(3) saturate(2) sepia(1) hue-rotate(40deg); opacity: 0; }
     }
-    @keyframes arrowAppear {
-      from { opacity: 0; transform: translateX(-50%) scale(.5); }
-      to   { opacity: 1; transform: translateX(-50%) scale(1); }
+    #page-intro.fade-out {
+      animation: bgFade .4s ease forwards;
     }
-    @keyframes arrowLaunch {
-      0%   { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
-      55%  { opacity: 1; transform: translateX(-50%) translateY(-90px) scale(1.2); }
-      100% { opacity: 0; transform: translateX(-50%) translateY(-200px) scale(.5); }
+    @keyframes bgFade {
+      to { opacity: 0; }
     }
 
     .intro-bar {
       position: absolute; bottom: 0; left: 0;
       height: 2px; background: var(--accent);
-      animation: introBar 1.8s cubic-bezier(.77,0,.18,1) both;
+      animation: introBar 1.6s cubic-bezier(.77,0,.18,1) both;
     }
     @keyframes introBar {
       from { width: 0; }
@@ -710,7 +698,6 @@
 <div id="page-intro">
   <div id="intro-wrap">
     <img id="intro-img" src="images/fulex-media-logo.png" alt="Fulex Media" />
-    <div id="intro-arrow-overlay"></div>
   </div>
   <div class="intro-bar"></div>
 </div>
@@ -1169,16 +1156,17 @@
     cb.style.display = 'none';
   });
 
-  /* page intro — arrow launch sequence */
+  /* page intro */
   const intro = document.getElementById('page-intro');
-  const arrowOverlay = document.getElementById('intro-arrow-overlay');
+  const introImg = document.getElementById('intro-img');
 
-  setTimeout(() => arrowOverlay.classList.add('launch'), 1100);
-  setTimeout(() => arrowOverlay.classList.add('hidden'), 1700);
   setTimeout(() => {
-    intro.classList.add('fade-out');
-    setTimeout(() => intro.classList.add('done'), 650);
-  }, 1750);
+    introImg.classList.add('launch');
+    setTimeout(() => {
+      intro.classList.add('fade-out');
+      setTimeout(() => intro.classList.add('done'), 420);
+    }, 500);
+  }, 1600);
 
 
   /* custom cursor */
