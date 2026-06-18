@@ -99,16 +99,17 @@
       to   { opacity: 1; transform: none; }
     }
     #intro-img.launch {
-      animation: logoLaunch 1.1s cubic-bezier(.4,0,.2,1) forwards;
+      animation: logoLaunch 1.4s cubic-bezier(.4,0,.2,1) forwards;
     }
     @keyframes logoLaunch {
-      0%   { transform: translateY(0);      filter: none; opacity: 1; }
-      20%  { transform: translateY(-8px);   filter: none; opacity: 1; }
-      55%  { transform: translateY(-40px);  filter: invert(1) sepia(1) saturate(8) hue-rotate(55deg); opacity: 1; }
-      100% { transform: translateY(-160px); filter: invert(1) sepia(1) saturate(8) hue-rotate(55deg); opacity: 0; }
+      0%   { transform: translateY(0);       filter: none;                                                        opacity: 1; }
+      20%  { transform: translateY(-10px);   filter: none;                                                        opacity: 1; }
+      50%  { transform: translateY(-50px);   filter: brightness(0) saturate(1) invert(1) sepia(1) saturate(4) hue-rotate(40deg) brightness(1.2); opacity: 1; }
+      80%  { transform: translateY(-120px);  filter: brightness(0) saturate(1) invert(1) sepia(1) saturate(4) hue-rotate(40deg) brightness(1.2); opacity: .5; }
+      100% { transform: translateY(-220px);  filter: brightness(0) saturate(1) invert(1) sepia(1) saturate(4) hue-rotate(40deg) brightness(1.2); opacity: 0; }
     }
     #page-intro.fade-out {
-      animation: bgFade .8s ease forwards;
+      animation: bgFade 1s ease forwards;
     }
     @keyframes bgFade {
       0%   { opacity: 1; }
@@ -363,19 +364,46 @@
     .gpt { opacity: 0; }
     #rocket-end { opacity: 0; }
     #rocket-end.flyaway {
-      animation: rocketFlyAway .8s cubic-bezier(.55,0,.7,.9) forwards;
+      animation: rocketFlyAway 1.2s cubic-bezier(.4,0,.1,1) forwards;
     }
     @keyframes rocketFlyAway {
-      0%   { opacity: 1; transform: translate(0,0) rotate(0deg); transform-origin: 490px 0px; }
-      100% { opacity: 0; transform: translate(50px,-120px) rotate(20deg); transform-origin: 490px 0px; }
+      0%   { opacity: 1; transform: translate(0,0)       scale(1);    transform-origin: 490px 0px; }
+      40%  { opacity: 1; transform: translate(-60px,-140px) scale(1.1); transform-origin: 490px 0px; }
+      75%  { opacity: 1; transform: translate(-100px,-280px) scale(.9); transform-origin: 490px 0px; }
+      100% { opacity: 0; transform: translate(-110px,-360px) scale(.5); transform-origin: 490px 0px; }
+    }
+
+    /* firework explosion */
+    .fw-particle {
+      position: absolute;
+      width: 6px; height: 6px; border-radius: 50%;
+      background: #c9f542;
+      animation: fwBurst .9s cubic-bezier(.2,.8,.4,1) forwards;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .fw-particle.ring {
+      width: 4px; height: 4px;
+      background: transparent;
+      border: 1.5px solid #c9f542;
+    }
+    @keyframes fwBurst {
+      0%   { opacity: 1; transform: translate(0,0) scale(1); }
+      60%  { opacity: .8; }
+      100% { opacity: 0; transform: var(--fw-dir) scale(0.2); }
+    }
+    #firework {
+      position: absolute; pointer-events: none;
+      top: 0; left: 0; width: 0; height: 0;
+      overflow: visible; z-index: 10;
     }
     .flame {
-      animation: flameFlicker .25s ease-in-out infinite alternate;
-      transform-origin: 316px 22px;
+      animation: flameFlicker .2s ease-in-out infinite alternate;
+      transform-origin: 490px 14px;
     }
     @keyframes flameFlicker {
-      0%   { transform: scaleY(1)   scaleX(1);   opacity: 1; }
-      100% { transform: scaleY(.7)  scaleX(.85); opacity: .7; }
+      0%   { transform: scaleY(1)  scaleX(1);    opacity: 1; }
+      100% { transform: scaleY(.6) scaleX(.8);   opacity: .7; }
     }
 
     .scroll-arrow {
@@ -871,7 +899,8 @@
       <div class="growth-header">
         <span class="growth-title">Reichweite durch Kontinuität</span>
       </div>
-      <div class="growth-chart">
+      <div class="growth-chart" style="position:relative">
+        <div id="firework"></div>
         <svg id="growth-svg" viewBox="0 0 500 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;overflow:visible">
           <line x1="40" y1="8" x2="40" y2="130" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
           <line x1="40" y1="130" x2="490" y2="130" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
@@ -1382,8 +1411,65 @@
     setTimeout(() => {
       rocket.style.transition = 'opacity .3s ease';
       rocket.style.opacity = '1';
-      setTimeout(() => rocket.classList.add('flyaway'), 1000);
+      setTimeout(() => {
+        rocket.classList.add('flyaway');
+        // firework explodes where rocket was (near top of chart)
+        setTimeout(() => explodeFirework(), 900);
+      }, 1000);
     }, 4200);
+  }
+
+  function explodeFirework() {
+    const fw = document.getElementById('firework');
+    if (!fw) return;
+
+    // position relative to chart - near where rocket disappears
+    const chartRect = document.querySelector('.growth-chart').getBoundingClientRect();
+    const wrapRect  = document.querySelector('.growth-chart').getBoundingClientRect();
+
+    // angles for 12 particles spreading in all directions
+    const angles = [0,30,60,90,120,150,180,210,240,270,300,330];
+    const distances = [40,55,35,60,45,50,38,58,42,52,36,56];
+
+    angles.forEach((angle, i) => {
+      const rad = (angle * Math.PI) / 180;
+      const dist = distances[i];
+      const dx = Math.cos(rad) * dist;
+      const dy = Math.sin(rad) * dist;
+
+      const p = document.createElement('div');
+      p.className = 'fw-particle' + (i % 4 === 0 ? ' ring' : '');
+      p.style.cssText = `
+        left: 100px; top: -60px;
+        --fw-dir: translate(${dx}px, ${dy}px);
+        animation-delay: ${i * 0.02}s;
+        width: ${i % 3 === 0 ? '8px' : '5px'};
+        height: ${i % 3 === 0 ? '8px' : '5px'};
+        background: ${i % 2 === 0 ? '#c9f542' : 'rgba(201,245,66,0.6)'};
+      `;
+      fw.appendChild(p);
+      setTimeout(() => p.remove(), 1200);
+    });
+
+    // second burst — smaller delayed
+    setTimeout(() => {
+      [0,45,90,135,180,225,270,315].forEach((angle, i) => {
+        const rad = (angle * Math.PI) / 180;
+        const dist = 25 + i * 3;
+        const p = document.createElement('div');
+        p.className = 'fw-particle';
+        p.style.cssText = `
+          left: 100px; top: -60px;
+          --fw-dir: translate(${Math.cos(rad)*dist}px, ${Math.sin(rad)*dist}px);
+          animation-delay: ${i * 0.03}s;
+          width: 4px; height: 4px;
+          background: #c9f542;
+          border-radius: 2px;
+        `;
+        fw.appendChild(p);
+        setTimeout(() => p.remove(), 1200);
+      });
+    }, 150);
   }
 
   /* scroll arrow */
