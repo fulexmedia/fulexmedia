@@ -102,9 +102,9 @@
       animation: logoLaunch .7s cubic-bezier(.55,0,.7,.9) forwards;
     }
     @keyframes logoLaunch {
-      0%   { transform: translateY(0);     filter: brightness(1) saturate(1); opacity: 1; }
-      30%  { transform: translateY(-20px); filter: brightness(2) saturate(0) sepia(1) hue-rotate(40deg) brightness(3); opacity: 1; }
-      100% { transform: translateY(-120px); filter: brightness(3) saturate(2) sepia(1) hue-rotate(40deg); opacity: 0; }
+      0%   { transform: translateY(0);      filter: none; opacity: 1; }
+      25%  { transform: translateY(-15px);  filter: invert(1) sepia(1) saturate(8) hue-rotate(55deg); opacity: 1; }
+      100% { transform: translateY(-130px); filter: invert(1) sepia(1) saturate(8) hue-rotate(55deg); opacity: 0; }
     }
     #page-intro.fade-out {
       animation: bgFade .4s ease forwards;
@@ -253,6 +253,7 @@
       min-height: 100svh;
       display: flex; flex-direction: column; justify-content: center;
       padding-top: 100px; padding-bottom: 5rem;
+      position: relative;
     }
     .hero-badge {
       display: inline-flex; align-items: center; gap: 8px;
@@ -313,19 +314,93 @@
 
     .hero-stats {
       display: grid; grid-template-columns: repeat(3,1fr);
-      gap: 1px; margin-top: 4rem;
+      gap: 1px; margin-top: 3rem;
       background: var(--border);
       border: 1px solid var(--border); border-radius: var(--r);
       overflow: hidden; max-width: 560px;
       animation: fadeUp 1s .8s both;
     }
-    .hstat { background: var(--bg2); padding: 1.4rem; }
+    .hstat { background: var(--bg2); padding: 1.25rem; }
     .hstat .n {
       font-family: var(--ff-h);
-      font-size: 2.2rem; letter-spacing: .04em;
+      font-size: 2rem; letter-spacing: .04em;
       color: var(--accent); line-height: 1; margin-bottom: 3px;
     }
-    .hstat .l { font-size: .75rem; color: var(--muted); }
+    .hstat .l { font-size: .72rem; color: var(--muted); line-height: 1.4; }
+
+    .btng-pill {
+      display: inline-flex; align-items: center;
+      border: 1px solid var(--borderL);
+      color: var(--text); font-size: .875rem; font-weight: 500;
+      padding: 12px 20px; border-radius: var(--rsm);
+      text-decoration: none; transition: border-color .2s, color .2s;
+      white-space: nowrap;
+    }
+    .btng-pill:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* XY growth chart */
+    .growth-wrap {
+      margin-top: 3rem; max-width: 480px;
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: var(--r); padding: 1.25rem 1.5rem;
+      animation: fadeUp 1s .9s both;
+    }
+    .growth-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+    .growth-title { font-size: .75rem; font-weight: 500; color: var(--muted); }
+    .growth-badge {
+      font-family: var(--ff-h); font-size: .85rem; letter-spacing: .08em;
+      color: #080808; background: var(--accent);
+      padding: 2px 9px; border-radius: 4px;
+    }
+    .growth-chart { height: 140px; }
+
+    #growth-line {
+      stroke-dasharray: 600;
+      stroke-dashoffset: 600;
+      transition: none;
+    }
+    #growth-fill { opacity: 0; }
+    .gpt { opacity: 0; }
+    #rocket-end { opacity: 0; }
+    #rocket-end.flyaway {
+      animation: rocketFlyAway .7s cubic-bezier(.55,0,.7,.9) forwards;
+    }
+    @keyframes rocketFlyAway {
+      0%   { opacity: 1; transform: translate(0,0) rotate(0deg); transform-origin: 316px 8px; }
+      100% { opacity: 0; transform: translate(30px,-80px) rotate(25deg); transform-origin: 316px 8px; }
+    }
+
+    .growth-footer {
+      display: flex; align-items: center; gap: 0;
+      margin-top: 1rem; padding-top: 1rem;
+      border-top: 1px solid var(--border);
+    }
+    .growth-stat { display: flex; flex-direction: column; gap: 1px; flex: 1; }
+    .gs-num {
+      font-family: var(--ff-h); font-size: 1.3rem; letter-spacing: .04em;
+      color: var(--accent); line-height: 1;
+    }
+    .gs-lbl { font-size: .68rem; color: var(--muted); }
+    .growth-divider { width: 1px; height: 32px; background: var(--border); margin: 0 .75rem; flex-shrink: 0; }
+
+    .scroll-arrow {
+      position: absolute; bottom: 2.5rem; left: 50%;
+      transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+      animation: fadeUp 1s 1.2s both;
+      cursor: pointer;
+    }
+    .scroll-arrow svg {
+      animation: scrollBounce 1.8s ease-in-out infinite;
+    }
+    .scroll-arrow.hidden { opacity: 0; pointer-events: none; transition: opacity .3s; }
+    @keyframes scrollBounce {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(7px); }
+    }
 
     /* ─── MARQUEE ────────────────────────────────────────── */
     .mwrap {
@@ -466,6 +541,8 @@
     .reel-carousel-wrap {
       position: relative; margin-top: 3rem;
       overflow: hidden;
+      width: 100vw;
+      margin-left: calc(-1 * clamp(1.5rem,5vw,4rem));
     }
     .reel-carousel-wrap::before,
     .reel-carousel-wrap::after {
@@ -659,8 +736,13 @@
     @media (max-width: 700px) {
       .ki { grid-template-columns: 1fr; gap: 2.5rem; }
       .frow { grid-template-columns: 1fr; }
-      .hero-stats { max-width: 100%; }
       .fi { flex-direction: column; align-items: flex-start; }
+      #hero { padding-top: 80px; padding-bottom: 4rem; }
+      .hero-acts { gap: .6rem; }
+      .btnp { font-size: .8rem; padding: 11px 16px; }
+      .btng-pill { font-size: .8rem; padding: 11px 16px; }
+      .viral-rocket-wrap { max-width: 100%; margin-top: 2rem; }
+      .scroll-arrow { bottom: 1.25rem; }
     }
 
     /* ─── HERO GREEN FADE ────────────────────────────────── */
@@ -772,15 +854,54 @@
       <span class="line"><span class="li" style="color:var(--accent)">DER WIRKLICH</span></span>
       <span class="line"><span class="li">VERKAUFT.</span></span>
     </h1>
-    <p class="hero-sub">Deine Marke verdient Aufmerksamkeit. Wir sorgen dafür, dass sie sie bekommt — mit Content der stoppt, fesselt und verkauft.</p>
+    <p class="hero-sub">Starker Content, der Aufmerksamkeit erzeugt — und Ergebnisse liefert.</p>
     <div class="hero-acts">
       <a href="#kontakt" class="btnp">Kostenloses Erstgespräch <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
-      <a href="#referenzen" class="btng">Referenzen ansehen <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      <a href="#referenzen" class="btng-pill">Referenzen</a>
     </div>
-    <div class="hero-stats">
-      <div class="hstat"><div class="n">50+</div><div class="l">Projekte abgeschlossen</div></div>
-      <div class="hstat"><div class="n">100%</div><div class="l">Kundenzufriedenheit</div></div>
-      <div class="hstat"><div class="n">3×</div><div class="l">Mehr Reichweite im Schnitt</div></div>
+
+    <!-- XY growth chart -->
+    <div class="growth-wrap" id="growth-wrap">
+      <div class="growth-header">
+        <span class="growth-title">Reichweite durch Content Consistency</span>
+      </div>
+      <div class="growth-chart">
+        <svg id="growth-svg" viewBox="0 0 320 140" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;overflow:visible">
+          <line x1="36" y1="8" x2="36" y2="112" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+          <line x1="36" y1="112" x2="316" y2="112" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+          <text x="28" y="114" text-anchor="end" fill="rgba(255,255,255,0.22)" font-size="7.5" font-family="Inter,sans-serif">Niedrig</text>
+          <text x="28" y="12"  text-anchor="end" fill="rgba(255,255,255,0.22)" font-size="7.5" font-family="Inter,sans-serif">Hoch</text>
+          <text x="28" y="63"  text-anchor="end" fill="rgba(255,255,255,0.22)" font-size="7.5" font-family="Inter,sans-serif">Reichweite</text>
+          <text x="36"  y="124" text-anchor="middle" fill="rgba(255,255,255,0.2)" font-size="7.5" font-family="Inter,sans-serif">Start</text>
+          <text x="148" y="124" text-anchor="middle" fill="rgba(255,255,255,0.2)" font-size="7.5" font-family="Inter,sans-serif">Monat 2</text>
+          <text x="260" y="124" text-anchor="middle" fill="rgba(255,255,255,0.2)" font-size="7.5" font-family="Inter,sans-serif">Monat 4</text>
+          <text x="316" y="124" text-anchor="middle" fill="rgba(255,255,255,0.2)" font-size="7.5" font-family="Inter,sans-serif">Viral</text>
+          <line x1="36" y1="86" x2="316" y2="86" stroke="rgba(255,255,255,0.05)" stroke-width="1" stroke-dasharray="4,4"/>
+          <line x1="36" y1="60" x2="316" y2="60" stroke="rgba(255,255,255,0.05)" stroke-width="1" stroke-dasharray="4,4"/>
+          <line x1="36" y1="34" x2="316" y2="34" stroke="rgba(255,255,255,0.05)" stroke-width="1" stroke-dasharray="4,4"/>
+          <line x1="36" y1="10" x2="316" y2="10" stroke="rgba(255,255,255,0.05)" stroke-width="1" stroke-dasharray="4,4"/>
+          <path id="growth-fill"
+            d="M36,112 C60,111 75,110 92,108 C110,105 118,100 148,90 C175,80 188,64 204,50 C220,36 238,20 260,12 C280,6 300,4 316,2 L316,112 Z"
+            fill="rgba(201,245,66,0.07)" opacity="0"/>
+          <path id="growth-line"
+            d="M36,112 C60,111 75,110 92,108 C110,105 118,100 148,90 C175,80 188,64 204,50 C220,36 238,20 260,12 C280,6 300,4 316,2"
+            fill="none" stroke="#c9f542" stroke-width="2.5" stroke-linecap="round"
+            stroke-dasharray="600" stroke-dashoffset="600"/>
+          <circle class="gpt" cx="36"  cy="112" r="3" fill="#c9f542" opacity="0"/>
+          <circle class="gpt" cx="92"  cy="108" r="3" fill="#c9f542" opacity="0"/>
+          <circle class="gpt" cx="148" cy="90"  r="3" fill="#c9f542" opacity="0"/>
+          <circle class="gpt" cx="204" cy="50"  r="3" fill="#c9f542" opacity="0"/>
+          <circle class="gpt" cx="260" cy="12"  r="3" fill="#c9f542" opacity="0"/>
+          <g id="rocket-end" opacity="0">
+            <text id="rocket-emoji" x="316" y="8" text-anchor="middle" font-size="14">&#x1F680;</text>
+          </g>
+        </svg>
+      </div>
+    </div>
+
+    <!-- scroll indicator -->
+    <div class="scroll-arrow" id="scroll-arrow">
+      <svg width="18" height="18" fill="none" stroke="#c9f542" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
     </div>
   </div>
 </section>
@@ -810,7 +931,7 @@
 </div>
 
 <!-- PROBLEM -->
-<section id="problem">
+<section id="problem" style="display:none">
   <div class="wrap">
     <p class="eyebrow reveal">Das Problem</p>
     <h2 class="sh reveal d1">Warum Social Media bei den meisten nicht funktioniert</h2>
@@ -844,13 +965,13 @@
 <section id="leistungen">
   <div class="wrap">
     <p class="eyebrow reveal">Leistungen</p>
-    <h2 class="sh reveal d1">Was wir für dich tun</h2>
-    <p class="sub reveal d2">Von der Idee bis zum fertigen Post. Wir übernehmen alles oder arbeiten als verlängerter Arm deines Teams.</p>
+    <h2 class="sh reveal d1">Was wir machen</h2>
+    <p class="sub reveal d2">Von der Idee bis zum fertigen Post. Full-Service oder als Erweiterung eines bestehenden Teams.</p>
     <div class="grid-border lgrid">
       <div class="lcard reveal d1">
         <div class="lnum">01</div>
         <h3>Social Media Strategie</h3>
-        <p>Zieldefinition, Zielgruppenanalyse, Kanalstrategie & Content-Planung — maßgeschneidert auf deine Marke.</p>
+        <p>Zieldefinition, Zielgruppenanalyse, Kanalstrategie & Content-Planung — maßgeschneidert auf die Marke.</p>
         <div class="tags"><span class="tag">Instagram</span><span class="tag">TikTok</span><span class="tag">LinkedIn</span></div>
       </div>
       <div class="lcard reveal d2">
@@ -868,7 +989,7 @@
       <div class="lcard reveal d1">
         <div class="lnum">04</div>
         <h3>Logo & Corporate Identity</h3>
-        <p>Logo Design, Farbwelt, Typografie, Templates — eine konsistente visuelle Sprache, die deine Marke unverwechselbar macht.</p>
+        <p>Logo Design, Farbwelt, Typografie, Templates — eine konsistente visuelle Sprache, die eine Marke unverwechselbar macht.</p>
         <div class="tags"><span class="tag">Logo Design</span><span class="tag">Branding</span><span class="tag">Style Guide</span></div>
       </div>
       <div class="lcard reveal d2">
@@ -880,7 +1001,7 @@
       <div class="lcard reveal d3">
         <div class="lnum">06</div>
         <h3>Analytics & Reporting</h3>
-        <p>Monatliche Auswertung deiner KPIs mit konkreten Handlungsempfehlungen — transparent & verständlich.</p>
+        <p>Monatliche Auswertung der KPIs mit konkreten Handlungsempfehlungen — transparent & verständlich.</p>
         <div class="tags"><span class="tag">Insights</span><span class="tag">Reporting</span><span class="tag">Optimierung</span></div>
       </div>
     </div>
@@ -896,7 +1017,7 @@
     <div class="plist">
       <div class="pstep reveal"><div class="snum">01</div><div class="scont"><h3>Erstgespräch & Analyse</h3><p>Wir lernen dein Business, deine Ziele und deine aktuelle Situation kennen — kostenlos & unverbindlich.</p></div></div>
       <div class="pstep reveal d1"><div class="snum">02</div><div class="scont"><h3>Strategie & Konzept</h3><p>Auf Basis der Analyse entwickeln wir eine maßgeschneiderte Content-Strategie mit konkretem Redaktionsplan.</p></div></div>
-      <div class="pstep reveal d2"><div class="snum">03</div><div class="scont"><h3>Produktion</h3><p>Video-Dreh, Foto-Shooting, Editing, Design — wir liefern fertigen Content, der zu deiner Marke passt.</p></div></div>
+      <div class="pstep reveal d2"><div class="snum">03</div><div class="scont"><h3>Produktion</h3><p>Video-Dreh, Foto-Shooting, Editing, Design — wir liefern fertigen Content, der zur Marke passt.</p></div></div>
       <div class="pstep reveal d3"><div class="snum">04</div><div class="scont"><h3>Veröffentlichung & Ads</h3><p>Gezieltes Posten zum optimalen Zeitpunkt, organisch oder mit bezahlter Reichweite verstärkt.</p></div></div>
       <div class="pstep reveal d4"><div class="snum">05</div><div class="scont"><h3>Analyse & Optimierung</h3><p>Monatliches Reporting mit klaren Zahlen. Was funktioniert, wird skaliert — was nicht, wird geändert.</p></div></div>
     </div>
@@ -907,7 +1028,7 @@
 <section id="team">
   <div class="wrap">
     <p class="eyebrow reveal">Das Team</p>
-    <h2 class="sh reveal d1">Wir hinter der Kamera</h2>
+    <h2 class="sh reveal d1">Menschen hinter der Kamera</h2>
     <p class="sub reveal d2">Kein anonymes Agentur-Konstrukt. Hinter jedem Projekt stehen echte Menschen mit echter Leidenschaft für Content.</p>
     <div class="tgrid">
 
@@ -921,8 +1042,8 @@
           </div>
         </div>
         <div class="tbody">
-          <h3>KASPAR BENTHE</h3>
-          <div class="trole">Strategie &amp; Creative Director</div>
+          <h3>VORNAME NAME</h3>
+          <div class="trole">Gründer &amp; Creative Director</div>
           <p>Ich brenne für visuelles Storytelling. Mit der Kamera aufgewachsen, weiß ich wie man Marken so in Szene setzt, dass Menschen wirklich hinschauen — und bleiben.</p>
           <div class="tsoc">
             <a href="https://www.instagram.com/fulex.media/" class="tsocl" aria-label="Instagram" target="_blank" rel="noopener">
@@ -936,17 +1057,13 @@
       </div>
 
       <!-- PERSON 2 -->
-      <div class="tcard reveal d2" style="display:none">
+      <div class="tcard reveal d2" id="team-card-2">
         <div class="tphoto">
-          <img src="images/team-2.jpg" alt="Vorname Nachname" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-          <div class="tplaceholder" style="display:none;">
-            <div class="tinit">VN</div>
-            <span class="tphlbl">Foto hier einfügen</span>
-          </div>
+          <img src="images/team-2.jpg" alt="Vorname Nachname" style="width:100%;height:100%;object-fit:cover;" onerror="document.getElementById('team-card-2').style.display='none'">
         </div>
         <div class="tbody">
-          <h3>DANIEL BORN</h3>
-          <div class="trole">Grafikdesign &amp; Social Media</div>
+          <h3>VORNAME NAME</h3>
+          <div class="trole">Strategie &amp; Social Media</div>
           <p>Zahlen, Trends und Plattform-Algorithmen sind meine Welt. Ich sorge dafür, dass großartiger Content auch die richtigen Menschen erreicht und echte Ergebnisse liefert.</p>
           <div class="tsoc">
             <a href="https://www.instagram.com/fulex.media/" class="tsocl" aria-label="Instagram" target="_blank" rel="noopener">
@@ -969,7 +1086,7 @@
     <p class="eyebrow reveal">In Zahlen</p>
     <h2 class="sh reveal d1">Was wir erreicht haben</h2>
     <div class="grid-border zgrid">
-      <div class="zcard reveal d1"><div class="zbig">99+</div><p>Projekte abgeschlossen</p></div>
+      <div class="zcard reveal d1"><div class="zbig">50+</div><p>Projekte abgeschlossen</p></div>
       <div class="zcard reveal d2"><div class="zbig">5×</div><p>Mehr organische Reichweite im Schnitt</p></div>
       <div class="zcard reveal d3"><div class="zbig">100%</div><p>Kundenzufriedenheit</p></div>
       <div class="zcard reveal d4"><div class="zbig">10+</div><p>Zufriedene Marken & Unternehmen</p></div>
@@ -1017,23 +1134,23 @@
 <section id="fuerwen">
   <div class="wrap">
     <p class="eyebrow reveal">Für wen</p>
-    <h2 class="sh reveal d1">Für dich, wenn du…</h2>
+    <h2 class="sh reveal d1">Für wen wir arbeiten</h2>
     <p class="sub reveal d2">Wir arbeiten mit Menschen und Unternehmen, die Social Media ernstnehmen.</p>
     <div class="agrid">
       <div class="acard reveal d1">
         <div class="aico"><svg width="18" height="18" fill="none" stroke="var(--accent)" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
         <h3>Startup oder neue Brand</h3>
-        <p>Du startest und willst von Anfang an professionell auftreten. Wir bauen deine Präsenz auf.</p>
+        <p>Neu am Markt und professionell auftreten — wir bauen die Präsenz auf.</p>
       </div>
       <div class="acard reveal d2">
         <div class="aico"><svg width="18" height="18" fill="none" stroke="var(--accent)" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg></div>
         <h3>Etabliertes Unternehmen</h3>
-        <p>Dein Business läuft, aber auf Social Media bist du kaum sichtbar. Das ändern wir.</p>
+        <p>Das Business läuft, aber Social Media liegt brach. Das ändern wir.</p>
       </div>
       <div class="acard reveal d3">
         <div class="aico"><svg width="18" height="18" fill="none" stroke="var(--accent)" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
         <h3>Personal Brand</h3>
-        <p>Du bist das Produkt. Wir helfen dir, dich klar zu positionieren und Reichweite aufzubauen.</p>
+        <p>Die Person ist das Produkt. Wir helfen bei klarer Positionierung und Reichweitenaufbau.</p>
       </div>
       <div class="acard reveal d4">
         <div class="aico"><svg width="18" height="18" fill="none" stroke="var(--accent)" stroke-width="2" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg></div>
@@ -1050,8 +1167,8 @@
     <div class="ki">
       <div class="kl">
         <p class="eyebrow reveal">Kontakt</p>
-        <h2 class="sh reveal d1">Lass uns reden.</h2>
-        <p class="reveal d2">Schreib uns oder ruf direkt an. Wir melden uns innerhalb von 24 Stunden — unverbindlich, kostenlos, auf Augenhöhe.</p>
+        <h2 class="sh reveal d1">Jetzt Kontakt aufnehmen.</h2>
+        <p class="reveal d2">Einfach melden — wir antworten innerhalb von 24 Stunden. Unverbindlich und kostenlos.</p>
         <div class="kinfo reveal d3">
           <a href="mailto:studio@fulex.media" class="klink">
             <div class="kico"><svg width="14" height="14" fill="none" stroke="var(--accent)" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
@@ -1076,7 +1193,7 @@
           </div>
           <input type="tel" name="phone" placeholder="Telefon (optional)" />
           <select name="leistung">
-            <option value="" disabled selected>Welche Leistung interessiert dich?</option>
+            <option value="" disabled selected>Welche Leistung ist relevant?</option>
             <option>Social Media Strategie</option>
             <option>Content Creation & Grafikdesign</option>
             <option>Logo & Corporate Identity</option>
@@ -1112,7 +1229,7 @@
   <h2 class="viral-h reveal">
     BEREIT<br/><em>VIRAL</em><br/>ZU GEHEN?
   </h2>
-  <p class="viral-sub reveal d1">Lass uns gemeinsam Content bauen, der deine Zielgruppe stoppt — und dein Business wachsen lässt.</p>
+  <p class="viral-sub reveal d1">Content der die Zielgruppe stoppt — und das Business wachsen lässt.</p>
   <div class="viral-actions reveal d2">
     <a href="#kontakt" class="btnp">
       Jetzt kostenlos anfragen
@@ -1204,6 +1321,67 @@
   burger.addEventListener('click', () => mob.classList.toggle('open'));
   mc.addEventListener('click', () => mob.classList.remove('open'));
   mob.querySelectorAll('.mm').forEach(l => l.addEventListener('click', () => mob.classList.remove('open')));
+
+  /* chart animation — triggers when visible, delayed after intro */
+  const chartWrap = document.getElementById('growth-wrap');
+  if (chartWrap) {
+    let chartAnimated = false;
+    const chartObs = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting && !chartAnimated) {
+        chartAnimated = true;
+        chartObs.disconnect();
+        setTimeout(runChartAnim, 2800);
+      }
+    }, { threshold: 0.3 });
+    chartObs.observe(chartWrap);
+  }
+
+  function runChartAnim() {
+    const line   = document.getElementById('growth-line');
+    const fill   = document.getElementById('growth-fill');
+    const dots   = document.querySelectorAll('.gpt');
+    const rocket = document.getElementById('rocket-end');
+
+    // draw line slowly
+    line.style.transition = 'stroke-dashoffset 3.8s cubic-bezier(.25,.46,.45,.94)';
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => { line.style.strokeDashoffset = '0'; });
+    });
+
+    // dots pop in sequence along the curve
+    const dotTimes = [600, 1200, 1900, 2600, 3200];
+    dots.forEach((d, i) => {
+      setTimeout(() => {
+        d.style.transition = 'opacity .3s ease';
+        d.style.opacity = '1';
+      }, dotTimes[i]);
+    });
+
+    // fill fades in after line finishes
+    setTimeout(() => {
+      fill.style.transition = 'opacity 1s ease';
+      fill.style.opacity = '1';
+    }, 3800);
+
+    // rocket appears at end
+    setTimeout(() => {
+      rocket.style.transition = 'opacity .3s ease';
+      rocket.style.opacity = '1';
+      setTimeout(() => rocket.classList.add('flyaway'), 1000);
+    }, 4200);
+  }
+
+  /* scroll arrow */
+  const scrollArrow = document.getElementById('scroll-arrow');
+  if (scrollArrow) {
+    scrollArrow.addEventListener('click', () => {
+      document.getElementById('leistungen').scrollIntoView({ behavior: 'smooth' });
+    });
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 80) scrollArrow.classList.add('hidden');
+      else scrollArrow.classList.remove('hidden');
+    }, { passive: true });
+  }
 
   /* scroll reveal */
   const obs = new IntersectionObserver(entries => {
@@ -1330,7 +1508,7 @@
       <span class="chat-avatar-fallback" style="display:none">FM</span>
     </div>
     <div class="chat-head-text">
-      <h4>Fulex Assistent</h4>
+      <h4>Fulex Assistant</h4>
       <p>Social Media Experte</p>
     </div>
     <span class="chat-online"></span>
@@ -1369,7 +1547,7 @@
     chatBtn.classList.toggle('open', isOpen);
     if (isOpen && !opened) {
       opened = true;
-      addMsg('bot', 'Hey! 👋 Ich bin der Fulex-Assistent. Stell mir deine Fragen rund um Social Media — ich helfe dir gerne weiter!');
+      addMsg('bot', 'Hey! 👋 Ich bin der Fulex-Assistent. Fragen rund um Social Media? Ich helfe gerne weiter!');
     }
     if (isOpen) setTimeout(() => chatInput.focus(), 200);
   });
