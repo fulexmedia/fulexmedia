@@ -83,33 +83,60 @@
       background: #080808;
       display: flex; align-items: center; justify-content: center;
       pointer-events: none;
+      will-change: opacity;
     }
     #page-intro.done { display: none; }
 
     #intro-wrap {
       position: relative;
       width: min(600px, 85vw);
+      will-change: transform;
     }
     #intro-img {
       width: 100%;
-      animation: introFadeIn 1.2s cubic-bezier(.25,.46,.45,.94) .2s both;
+      will-change: transform, opacity;
+      animation: introFadeIn 1.1s cubic-bezier(.25,.46,.45,.94) .1s both;
     }
     @keyframes introFadeIn {
-      from { opacity: 0; transform: translateY(16px); }
-      to   { opacity: 1; transform: none; }
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
+
+    /* green overlay on top of logo — avoids expensive filter on image */
+    #intro-green {
+      position: absolute; inset: 0;
+      background: #c9f542;
+      mix-blend-mode: color;
+      opacity: 0;
+      will-change: opacity;
+      pointer-events: none;
+      border-radius: 4px;
+    }
+
     #intro-img.launch {
-      animation: logoLaunch 1.4s cubic-bezier(.4,0,.2,1) forwards;
+      animation: logoLaunch 1.3s cubic-bezier(.4,0,.15,1) forwards;
+      will-change: transform, opacity;
+    }
+    #intro-green.launch {
+      animation: greenIn 1.3s cubic-bezier(.4,0,.15,1) forwards;
+      will-change: opacity;
     }
     @keyframes logoLaunch {
-      0%   { transform: translateY(0);       filter: none;                                                        opacity: 1; }
-      20%  { transform: translateY(-10px);   filter: none;                                                        opacity: 1; }
-      50%  { transform: translateY(-50px);   filter: brightness(0) saturate(1) invert(1) sepia(1) saturate(4) hue-rotate(40deg) brightness(1.2); opacity: 1; }
-      80%  { transform: translateY(-120px);  filter: brightness(0) saturate(1) invert(1) sepia(1) saturate(4) hue-rotate(40deg) brightness(1.2); opacity: .5; }
-      100% { transform: translateY(-220px);  filter: brightness(0) saturate(1) invert(1) sepia(1) saturate(4) hue-rotate(40deg) brightness(1.2); opacity: 0; }
+      0%   { transform: translateY(0);      opacity: 1; }
+      15%  { transform: translateY(-8px);   opacity: 1; }
+      70%  { transform: translateY(-100px); opacity: 1; }
+      100% { transform: translateY(-240px); opacity: 0; }
     }
+    @keyframes greenIn {
+      0%   { opacity: 0; }
+      20%  { opacity: 0; }
+      50%  { opacity: 1; }
+      100% { opacity: 0; }
+    }
+
     #page-intro.fade-out {
-      animation: bgFade 1s ease forwards;
+      animation: bgFade .9s cubic-bezier(.4,0,.2,1) forwards;
+      will-change: opacity;
     }
     @keyframes bgFade {
       0%   { opacity: 1; }
@@ -119,7 +146,8 @@
     .intro-bar {
       position: absolute; bottom: 0; left: 0;
       height: 2px; background: var(--accent);
-      animation: introBar 1.6s cubic-bezier(.77,0,.18,1) both;
+      will-change: width;
+      animation: introBar 1.8s cubic-bezier(.77,0,.18,1) both;
     }
     @keyframes introBar {
       from { width: 0; }
@@ -814,6 +842,7 @@
 <div id="page-intro">
   <div id="intro-wrap">
     <img id="intro-img" src="images/fulex-media-logo.png" alt="Fulex Media" />
+    <div id="intro-green"></div>
   </div>
   <div class="intro-bar"></div>
 </div>
@@ -943,10 +972,6 @@
       </div>
     </div>
 
-    <!-- scroll arrow — centered below graph -->
-    <div class="scroll-arrow" id="scroll-arrow">
-      <svg width="32" height="32" fill="none" stroke="#c9f542" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
-    </div>
   </div>
 </section>
 
@@ -1320,13 +1345,15 @@
   /* page intro */
   const intro = document.getElementById('page-intro');
   const introImg = document.getElementById('intro-img');
+  const introGreen = document.getElementById('intro-green');
 
   setTimeout(() => {
     introImg.classList.add('launch');
+    introGreen.classList.add('launch');
     setTimeout(() => {
       intro.classList.add('fade-out');
-      setTimeout(() => intro.classList.add('done'), 820);
-    }, 750);
+      setTimeout(() => intro.classList.add('done'), 920);
+    }, 800);
   }, 2000);
 
 
@@ -1470,18 +1497,6 @@
         setTimeout(() => p.remove(), 1200);
       });
     }, 150);
-  }
-
-  /* scroll arrow */
-  const scrollArrow = document.getElementById('scroll-arrow');
-  if (scrollArrow) {
-    scrollArrow.addEventListener('click', () => {
-      document.getElementById('leistungen').scrollIntoView({ behavior: 'smooth' });
-    });
-    window.addEventListener('scroll', () => {
-      if (window.scrollY > 120) scrollArrow.classList.add('hidden');
-      else scrollArrow.classList.remove('hidden');
-    }, { passive: true });
   }
 
   /* scroll reveal */
