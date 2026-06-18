@@ -1208,5 +1208,239 @@
   }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
   document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 </script>
+<!-- ─── CHATBOT ──────────────────────────────────────────── -->
+<style>
+  #chat-btn {
+    position: fixed; bottom: 1.75rem; right: 1.75rem; z-index: 500;
+    width: 54px; height: 54px; border-radius: 50%;
+    background: var(--accent); border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 24px rgba(201,245,66,.25);
+    transition: transform .2s, box-shadow .2s;
+  }
+  #chat-btn:hover { transform: scale(1.08); box-shadow: 0 6px 32px rgba(201,245,66,.35); }
+  #chat-btn svg { transition: opacity .2s; }
+  #chat-btn.open .icon-open  { display: none; }
+  #chat-btn.open .icon-close { display: block !important; }
+
+  #chat-box {
+    position: fixed; bottom: 6rem; right: 1.75rem; z-index: 500;
+    width: min(380px, calc(100vw - 2rem));
+    background: #111; border: 1px solid rgba(255,255,255,.1);
+    border-radius: 16px; overflow: hidden;
+    display: none; flex-direction: column;
+    box-shadow: 0 16px 60px rgba(0,0,0,.7);
+    animation: chatPop .25s cubic-bezier(.25,.46,.45,.94);
+  }
+  #chat-box.open { display: flex; }
+  @keyframes chatPop { from{opacity:0;transform:translateY(12px) scale(.97)} to{opacity:1;transform:none} }
+
+  .chat-head {
+    background: #161616; border-bottom: 1px solid rgba(255,255,255,.08);
+    padding: .9rem 1.1rem;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .chat-avatar {
+    width: 34px; height: 34px; border-radius: 50%;
+    background: var(--accent); display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .chat-avatar img { width: 22px; height: 22px; object-fit: contain; }
+  .chat-avatar-fallback { font-family: var(--ff-h); font-size: .9rem; color: #080808; letter-spacing:.04em; }
+  .chat-head-text h4 { font-size: .875rem; font-weight: 600; margin: 0; }
+  .chat-head-text p  { font-size: .72rem; color: var(--muted); margin: 0; }
+  .chat-online { width: 7px; height: 7px; border-radius: 50%; background: #4ade80; margin-left: auto; flex-shrink:0; }
+
+  .chat-msgs {
+    flex: 1; overflow-y: auto; padding: 1rem;
+    display: flex; flex-direction: column; gap: .625rem;
+    max-height: 340px; min-height: 200px;
+    scrollbar-width: thin; scrollbar-color: #333 transparent;
+  }
+  .msg {
+    max-width: 85%; padding: .625rem .875rem;
+    border-radius: 12px; font-size: .845rem; line-height: 1.55;
+    animation: msgIn .2s ease;
+  }
+  @keyframes msgIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:none} }
+  .msg.bot { background: #1e1e1e; color: var(--text); border-bottom-left-radius: 4px; align-self: flex-start; }
+  .msg.user { background: var(--accent); color: #080808; font-weight: 500; border-bottom-right-radius: 4px; align-self: flex-end; }
+  .msg.typing { background: #1e1e1e; align-self: flex-start; }
+  .dots { display: flex; gap: 4px; align-items: center; height: 18px; }
+  .dots span {
+    width: 6px; height: 6px; border-radius: 50%; background: var(--muted);
+    animation: dot .9s infinite;
+  }
+  .dots span:nth-child(2) { animation-delay: .15s; }
+  .dots span:nth-child(3) { animation-delay: .3s; }
+  @keyframes dot { 0%,60%,100%{transform:none;opacity:.4} 30%{transform:translateY(-5px);opacity:1} }
+
+  .chat-form {
+    display: flex; gap: 8px; padding: .75rem;
+    border-top: 1px solid rgba(255,255,255,.08);
+    background: #0f0f0f;
+  }
+  #chat-input {
+    flex: 1; background: #1a1a1a; border: 1px solid rgba(255,255,255,.1);
+    border-radius: 8px; color: var(--text); font-family: var(--ff-b);
+    font-size: .845rem; padding: 9px 13px; outline: none; resize: none;
+    transition: border-color .2s; line-height: 1.4; max-height: 100px;
+  }
+  #chat-input:focus { border-color: rgba(201,245,66,.4); }
+  #chat-input::placeholder { color: #3d3d3b; }
+  #chat-send {
+    width: 36px; height: 36px; border-radius: 8px; flex-shrink:0; align-self:flex-end;
+    background: var(--accent); border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: opacity .2s, transform .15s;
+  }
+  #chat-send:hover { opacity: .85; transform: scale(1.05); }
+  #chat-send:disabled { opacity: .4; cursor: not-allowed; transform: none; }
+
+  .chat-suggestions {
+    display: flex; flex-wrap: wrap; gap: 6px; padding: 0 1rem .75rem;
+  }
+  .sugg {
+    font-size: .72rem; font-weight: 500;
+    padding: 5px 11px; border-radius: 100px; cursor: pointer;
+    background: rgba(201,245,66,.08); border: 1px solid rgba(201,245,66,.18);
+    color: var(--accent); transition: background .2s;
+    white-space: nowrap;
+  }
+  .sugg:hover { background: rgba(201,245,66,.15); }
+</style>
+
+<!-- Chat Toggle Button -->
+<button id="chat-btn" aria-label="Chat öffnen">
+  <svg class="icon-open" width="22" height="22" fill="none" stroke="#080808" stroke-width="2.2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+  <svg class="icon-close" width="20" height="20" fill="none" stroke="#080808" stroke-width="2.5" viewBox="0 0 24 24" style="display:none"><path d="M18 6L6 18M6 6l12 12"/></svg>
+</button>
+
+<!-- Chat Window -->
+<div id="chat-box">
+  <div class="chat-head">
+    <div class="chat-avatar">
+      <img src="images/fulex-media-logo.png" alt="Fulex" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+      <span class="chat-avatar-fallback" style="display:none">FM</span>
+    </div>
+    <div class="chat-head-text">
+      <h4>Fulex Assistant</h4>
+      <p>Social Media Experte</p>
+    </div>
+    <span class="chat-online"></span>
+  </div>
+
+  <div class="chat-msgs" id="chat-msgs"></div>
+
+  <div class="chat-suggestions" id="chat-suggestions">
+    <span class="sugg">Was kostet Social Media Management?</span>
+    <span class="sugg">Wie oft sollte ich posten?</span>
+    <span class="sugg">TikTok oder Instagram?</span>
+    <span class="sugg">Wie startet man mit Reels?</span>
+  </div>
+
+  <div class="chat-form">
+    <textarea id="chat-input" placeholder="Frag mich zu Social Media…" rows="1"></textarea>
+    <button id="chat-send" aria-label="Senden">
+      <svg width="16" height="16" fill="none" stroke="#080808" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </button>
+  </div>
+</div>
+
+<script>
+  const chatBtn  = document.getElementById('chat-btn');
+  const chatBox  = document.getElementById('chat-box');
+  const chatMsgs = document.getElementById('chat-msgs');
+  const chatInput= document.getElementById('chat-input');
+  const chatSend = document.getElementById('chat-send');
+  const suggWrap = document.getElementById('chat-suggestions');
+
+  let history = [];
+  let opened  = false;
+
+  chatBtn.addEventListener('click', () => {
+    const isOpen = chatBox.classList.toggle('open');
+    chatBtn.classList.toggle('open', isOpen);
+    if (isOpen && !opened) {
+      opened = true;
+      addMsg('bot', 'Hey! 👋 Ich bin der Fulex-Assistent. Stell mir deine Fragen rund um Social Media — ich helfe dir gerne weiter!');
+    }
+    if (isOpen) setTimeout(() => chatInput.focus(), 200);
+  });
+
+  function addMsg(role, text) {
+    const d = document.createElement('div');
+    d.className = 'msg ' + role;
+    d.textContent = text;
+    chatMsgs.appendChild(d);
+    chatMsgs.scrollTop = chatMsgs.scrollHeight;
+    return d;
+  }
+
+  function showTyping() {
+    const d = document.createElement('div');
+    d.className = 'msg typing'; d.id = 'typing';
+    d.innerHTML = '<div class="dots"><span></span><span></span><span></span></div>';
+    chatMsgs.appendChild(d);
+    chatMsgs.scrollTop = chatMsgs.scrollHeight;
+  }
+  function hideTyping() {
+    const t = document.getElementById('typing');
+    if (t) t.remove();
+  }
+
+  async function sendMessage(text) {
+    if (!text.trim()) return;
+    suggWrap.style.display = 'none';
+
+    addMsg('user', text);
+    history.push({ role: 'user', content: text });
+    chatInput.value = '';
+    chatInput.style.height = 'auto';
+    chatSend.disabled = true;
+
+    showTyping();
+
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: history }),
+      });
+      const data = await res.json();
+      hideTyping();
+
+      const reply = data.reply || 'Entschuldigung, da ist etwas schiefgelaufen. Schreib uns direkt: studio@fulex.media';
+      addMsg('bot', reply);
+      history.push({ role: 'assistant', content: reply });
+
+    } catch {
+      hideTyping();
+      addMsg('bot', 'Verbindungsproblem — schreib uns direkt: studio@fulex.media');
+    }
+
+    chatSend.disabled = false;
+    chatInput.focus();
+  }
+
+  chatSend.addEventListener('click', () => sendMessage(chatInput.value));
+
+  chatInput.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage(chatInput.value);
+    }
+  });
+
+  chatInput.addEventListener('input', () => {
+    chatInput.style.height = 'auto';
+    chatInput.style.height = Math.min(chatInput.scrollHeight, 100) + 'px';
+  });
+
+  document.querySelectorAll('.sugg').forEach(s => {
+    s.addEventListener('click', () => sendMessage(s.textContent));
+  });
+</script>
+
 </body>
 </html>
