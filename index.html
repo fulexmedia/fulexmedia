@@ -1140,7 +1140,7 @@
         </div>
       </div>
       <div class="reveal d2">
-        <form action="https://formspree.io/f/xeeboegy" method="POST">
+        <form id="kontakt-form" action="https://formspree.io/f/xeeboegy" method="POST">
           <input type="hidden" name="_replyto" value="studio@fulex.media" />
           <div class="frow">
             <input type="text" name="name" placeholder="Dein Name" required />
@@ -1156,8 +1156,16 @@
             <option>Sonstiges</option>
           </select>
           <textarea name="nachricht" placeholder="Kurz beschreiben, worum es geht…"></textarea>
-          <button type="submit" class="fsub">Anfrage absenden <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+          <button type="submit" class="fsub" id="form-submit-btn">Anfrage absenden <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
         </form>
+
+        <div id="form-success" style="display:none; background:var(--bg3); border:1px solid rgba(201,245,66,.25); border-radius:12px; padding:2rem 1.5rem; text-align:center;">
+          <div style="width:48px;height:48px;border-radius:50%;background:rgba(201,245,66,.1);border:1px solid rgba(201,245,66,.3);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
+            <svg width="22" height="22" fill="none" stroke="#c9f542" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+          </div>
+          <h3 style="font-family:var(--ff-h);font-size:1.8rem;letter-spacing:.04em;margin-bottom:.5rem;">Nachricht erhalten!</h3>
+          <p style="font-size:.9rem;color:var(--muted);line-height:1.65;">Wir melden uns innerhalb von 24 Stunden — versprochen.</p>
+        </div>
       </div>
     </div>
   </div>
@@ -1372,6 +1380,35 @@
         setTimeout(() => p.remove(), 1200);
       });
     }, 150);
+  }
+
+  /* contact form AJAX — stays on page, shows success message */
+  const kForm = document.getElementById('kontakt-form');
+  const kSuccess = document.getElementById('form-success');
+  const kBtn = document.getElementById('form-submit-btn');
+  if (kForm) {
+    kForm.addEventListener('submit', async e => {
+      e.preventDefault();
+      kBtn.innerHTML = 'Wird gesendet…';
+      kBtn.disabled = true;
+      try {
+        const res = await fetch(kForm.action, {
+          method: 'POST',
+          body: new FormData(kForm),
+          headers: { 'Accept': 'application/json' }
+        });
+        if (res.ok) {
+          kForm.style.display = 'none';
+          kSuccess.style.display = 'block';
+        } else {
+          kBtn.innerHTML = 'Fehler — bitte direkt per E-Mail melden';
+          kBtn.disabled = false;
+        }
+      } catch {
+        kBtn.innerHTML = 'Fehler — bitte direkt per E-Mail melden';
+        kBtn.disabled = false;
+      }
+    });
   }
 
   const obs = new IntersectionObserver(entries => {
