@@ -38,7 +38,7 @@
        then change --ff-h to 'Benzin', sans-serif
     ── */
 
-    html { scroll-behavior: smooth; }
+    html { scroll-behavior: smooth; overflow-x: hidden; }
 
     body {
       background: var(--bg);
@@ -48,6 +48,7 @@
       line-height: 1.65;
       -webkit-font-smoothing: antialiased;
       overflow-x: hidden;
+      max-width: 100vw;
     }
 
     #cg {
@@ -475,8 +476,8 @@
     .reel-carousel-wrap {
       position: relative; margin-top: 3rem;
       overflow: hidden;
-      width: 100vw;
-      margin-left: calc(-1 * clamp(1.5rem,5vw,4rem));
+      width: 100%;
+      max-width: 100vw;
     }
     .reel-carousel-wrap::before,
     .reel-carousel-wrap::after {
@@ -485,6 +486,7 @@
     .reel-carousel-wrap::before { left: 0; background: linear-gradient(to right, var(--bg), transparent); }
     .reel-carousel-wrap::after  { right: 0; background: linear-gradient(to left, var(--bg), transparent); }
     .reel-track {
+      min-width: 0;
       display: flex; gap: 16px;
       animation: reelScroll 40s linear infinite;
       width: max-content;
@@ -990,14 +992,14 @@
       <!-- PERSON 1 ─ Namen, Rolle, Bio & Links hier anpassen -->
       <div class="tcard reveal d1">
         <div class="tphoto">
-          <img src="images/team-1.jpg" loading="lazy" alt="KASPAR BENTHE" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <img src="images/team-1.jpg" loading="lazy" alt="Vorname Nachname" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
           <div class="tplaceholder" style="display:none;">
             <div class="tinit">VN</div>
             <span class="tphlbl">Foto hier einfügen</span>
           </div>
         </div>
         <div class="tbody">
-          <h3>KASPAR BENTHE</h3>
+          <h3>VORNAME NAME</h3>
           <div class="trole">Gründer &amp; Creative Director</div>
           <p>Ich brenne für visuelles Storytelling. Mit der Kamera aufgewachsen, weiß ich wie man Marken so in Szene setzt, dass Menschen wirklich hinschauen — und bleiben.</p>
           <div class="tsoc">
@@ -1060,27 +1062,27 @@
   <div class="reel-carousel-wrap reveal d2">
     <div class="reel-track" id="reel-track">
       <!-- Set 1 — 10 videos -->
-      <div class="rcard"><div class="rvid"><video loading="lazy" preload="none" src="videos/reel-aesthetic-1.mp4" autoplay muted loop playsinline></video></div><div class="rbody"><h4>Produkt Reel</h4><p>Videoproduktion & Editing</p></div></div>
-      <div class="rcard"><div class="rvid"><video loading="lazy" preload="none" src="videos/reel-aesthetic-2.mp4" autoplay muted loop playsinline></video></div><div class="rbody"><h4>Brand Content</h4><p>Strategie & Produktion</p></div></div>
-      <div class="rcard"><div class="rvid"><video loading="lazy" preload="none" src="videos/reel-aesthetic-3.mp4" autoplay muted loop playsinline></video></div><div class="rbody"><h4>Lifestyle Reel</h4><p>Videoproduktion & Editing</p></div></div>
-      <div class="rcard"><div class="rvid"><video loading="lazy" preload="none" src="videos/reel-aesthetic-4.mp4" autoplay muted loop playsinline></video></div><div class="rbody"><h4>Story Format</h4><p>Content Creation</p></div></div>
-      <div class="rcard"><div class="rvid"><video loading="lazy" preload="none" src="videos/reel-aesthetic-5.mp4" autoplay muted loop playsinline></video></div><div class="rbody"><h4>Event Reel</h4><p>Videoproduktion</p></div></div>
-      <div class="rcard"><div class="rvid"><video loading="lazy" preload="none" src="videos/reel-6.mp4" autoplay muted loop playsinline></video></div><div class="rbody"><h4>Behind the Scenes</h4><p>On Set</p></div></div>
-      <div class="rcard"><div class="rvid"><video loading="lazy" preload="none" src="videos/reel-7.mp4" autoplay muted loop playsinline></video></div><div class="rbody"><h4>Produkt Launch</h4><p>Strategie & Ads</p></div></div>
-      <div class="rcard"><div class="rvid"><video loading="lazy" preload="none" src="videos/reel-8.mp4" autoplay muted loop playsinline></video></div><div class="rbody"><h4>Brand Film</h4><p>Imagefilm</p></div></div>
-      <div class="rcard"><div class="rvid"><video loading="lazy" preload="none" src="videos/reel-9.mp4" autoplay muted loop playsinline></video></div><div class="rbody"><h4>Social Ad</h4><p>Paid Social</p></div></div>
-      <div class="rcard"><div class="rvid"><video loading="lazy" preload="none" src="videos/reel-10.mp4" autoplay muted loop playsinline></video></div><div class="rbody"><h4>Testimonial</h4><p>Content Creation</p></div></div>
+      <div class="rcard"><div class="rvid"><video playsinline autoplay muted loop preload="none" src="videos/reel-aesthetic-1.mp4" autoplay muted loop playsinline></video></div><div class="rbody"><h4>Produkt Reel</h4><p>Videoproduktion & Editing</p></div></div>
+      <div class="rcard"><div class="rvid"><video playsinline autoplay muted loop preload="none" src="videos/reel-aesthetic-2.mp4" autoplay muted loop playsinline></video></div><div class="rbody"><h4>Brand Content</h4><p>Strategie & Produktion</p></div></div>
+      <div class="rcard"><div class="rvid"><video playsinline autoplay muted loop preload="none" src="videos/reel-aesthetic-3.mp4" autoplay muted loop playsinline></video></div><div class="rbody"><h4>Lifestyle Reel</h4><p>Videoproduktion & Editing</p></div></div>
+      <div class="rcard"><div class="rvid"><video playsinline autoplay muted loop preload="none" src="videos/reel-aesthetic-4.mp4" autoplay muted loop playsinline></video></div><div class="rbody"><h4>Story Format</h4><p>Content Creation</p></div></div>
+      <div class="rcard"><div class="rvid"><video playsinline autoplay muted loop preload="none" src="videos/reel-aesthetic-5.mp4" autoplay muted loop playsinline></video></div><div class="rbody"><h4>Event Reel</h4><p>Videoproduktion</p></div></div>
+      <div class="rcard"><div class="rvid"><video playsinline autoplay muted loop preload="none" src="videos/reel-6.mp4" autoplay muted loop playsinline></video></div><div class="rbody"><h4>Behind the Scenes</h4><p>On Set</p></div></div>
+      <div class="rcard"><div class="rvid"><video playsinline autoplay muted loop preload="none" src="videos/reel-7.mp4" autoplay muted loop playsinline></video></div><div class="rbody"><h4>Produkt Launch</h4><p>Strategie & Ads</p></div></div>
+      <div class="rcard"><div class="rvid"><video playsinline autoplay muted loop preload="none" src="videos/reel-8.mp4" autoplay muted loop playsinline></video></div><div class="rbody"><h4>Brand Film</h4><p>Imagefilm</p></div></div>
+      <div class="rcard"><div class="rvid"><video playsinline autoplay muted loop preload="none" src="videos/reel-9.mp4" autoplay muted loop playsinline></video></div><div class="rbody"><h4>Social Ad</h4><p>Paid Social</p></div></div>
+      <div class="rcard"><div class="rvid"><video playsinline autoplay muted loop preload="none" src="videos/reel-10.mp4" autoplay muted loop playsinline></video></div><div class="rbody"><h4>Testimonial</h4><p>Content Creation</p></div></div>
       <!-- Set 2 — exakte Kopie für nahtlose Schleife -->
-      <div class="rcard"><div class="rvid"><video loading="lazy" preload="none" src="videos/reel-aesthetic-1.mp4" autoplay muted loop playsinline></video></div><div class="rbody"><h4>Produkt Reel</h4><p>Videoproduktion & Editing</p></div></div>
-      <div class="rcard"><div class="rvid"><video loading="lazy" preload="none" src="videos/reel-aesthetic-2.mp4" autoplay muted loop playsinline></video></div><div class="rbody"><h4>Brand Content</h4><p>Strategie & Produktion</p></div></div>
-      <div class="rcard"><div class="rvid"><video loading="lazy" preload="none" src="videos/reel-aesthetic-3.mp4" autoplay muted loop playsinline></video></div><div class="rbody"><h4>Lifestyle Reel</h4><p>Videoproduktion & Editing</p></div></div>
-      <div class="rcard"><div class="rvid"><video loading="lazy" preload="none" src="videos/reel-aesthetic-4.mp4" autoplay muted loop playsinline></video></div><div class="rbody"><h4>Story Format</h4><p>Content Creation</p></div></div>
-      <div class="rcard"><div class="rvid"><video loading="lazy" preload="none" src="videos/reel-aesthetic-5.mp4" autoplay muted loop playsinline></video></div><div class="rbody"><h4>Event Reel</h4><p>Videoproduktion</p></div></div>
-      <div class="rcard"><div class="rvid"><video loading="lazy" preload="none" src="videos/reel-6.mp4" autoplay muted loop playsinline></video></div><div class="rbody"><h4>Behind the Scenes</h4><p>On Set</p></div></div>
-      <div class="rcard"><div class="rvid"><video loading="lazy" preload="none" src="videos/reel-7.mp4" autoplay muted loop playsinline></video></div><div class="rbody"><h4>Produkt Launch</h4><p>Strategie & Ads</p></div></div>
-      <div class="rcard"><div class="rvid"><video loading="lazy" preload="none" src="videos/reel-8.mp4" autoplay muted loop playsinline></video></div><div class="rbody"><h4>Brand Film</h4><p>Imagefilm</p></div></div>
-      <div class="rcard"><div class="rvid"><video loading="lazy" preload="none" src="videos/reel-9.mp4" autoplay muted loop playsinline></video></div><div class="rbody"><h4>Social Ad</h4><p>Paid Social</p></div></div>
-      <div class="rcard"><div class="rvid"><video loading="lazy" preload="none" src="videos/reel-10.mp4" autoplay muted loop playsinline></video></div><div class="rbody"><h4>Testimonial</h4><p>Content Creation</p></div></div>
+      <div class="rcard"><div class="rvid"><video playsinline autoplay muted loop preload="none" src="videos/reel-aesthetic-1.mp4" autoplay muted loop playsinline></video></div><div class="rbody"><h4>Produkt Reel</h4><p>Videoproduktion & Editing</p></div></div>
+      <div class="rcard"><div class="rvid"><video playsinline autoplay muted loop preload="none" src="videos/reel-aesthetic-2.mp4" autoplay muted loop playsinline></video></div><div class="rbody"><h4>Brand Content</h4><p>Strategie & Produktion</p></div></div>
+      <div class="rcard"><div class="rvid"><video playsinline autoplay muted loop preload="none" src="videos/reel-aesthetic-3.mp4" autoplay muted loop playsinline></video></div><div class="rbody"><h4>Lifestyle Reel</h4><p>Videoproduktion & Editing</p></div></div>
+      <div class="rcard"><div class="rvid"><video playsinline autoplay muted loop preload="none" src="videos/reel-aesthetic-4.mp4" autoplay muted loop playsinline></video></div><div class="rbody"><h4>Story Format</h4><p>Content Creation</p></div></div>
+      <div class="rcard"><div class="rvid"><video playsinline autoplay muted loop preload="none" src="videos/reel-aesthetic-5.mp4" autoplay muted loop playsinline></video></div><div class="rbody"><h4>Event Reel</h4><p>Videoproduktion</p></div></div>
+      <div class="rcard"><div class="rvid"><video playsinline autoplay muted loop preload="none" src="videos/reel-6.mp4" autoplay muted loop playsinline></video></div><div class="rbody"><h4>Behind the Scenes</h4><p>On Set</p></div></div>
+      <div class="rcard"><div class="rvid"><video playsinline autoplay muted loop preload="none" src="videos/reel-7.mp4" autoplay muted loop playsinline></video></div><div class="rbody"><h4>Produkt Launch</h4><p>Strategie & Ads</p></div></div>
+      <div class="rcard"><div class="rvid"><video playsinline autoplay muted loop preload="none" src="videos/reel-8.mp4" autoplay muted loop playsinline></video></div><div class="rbody"><h4>Brand Film</h4><p>Imagefilm</p></div></div>
+      <div class="rcard"><div class="rvid"><video playsinline autoplay muted loop preload="none" src="videos/reel-9.mp4" autoplay muted loop playsinline></video></div><div class="rbody"><h4>Social Ad</h4><p>Paid Social</p></div></div>
+      <div class="rcard"><div class="rvid"><video playsinline autoplay muted loop preload="none" src="videos/reel-10.mp4" autoplay muted loop playsinline></video></div><div class="rbody"><h4>Testimonial</h4><p>Content Creation</p></div></div>
     </div>
   </div>
 </section>
