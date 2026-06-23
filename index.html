@@ -704,7 +704,17 @@
       .frow { grid-template-columns: 1fr; }
       .fi { flex-direction: column; align-items: flex-start; }
       #hero { padding-top: 80px; padding-bottom: 4rem; }
-      .hero-sub { max-width: 100%; }
+      #hero .wrap { width: 100%; overflow: hidden; }
+      .hero-h {
+        font-size: clamp(2.8rem, 13vw, 4rem);
+        letter-spacing: .02em;
+        word-break: break-word;
+      }
+      .hero-sub {
+        font-size: .875rem;
+        max-width: 100%;
+        padding-right: 0;
+      }
       .hero-acts { gap: .6rem; }
       .btnp { font-size: .78rem; padding: 10px 14px; }
       .btng-pill { font-size: .78rem; padding: 10px 14px; }
