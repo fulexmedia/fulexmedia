@@ -1116,9 +1116,11 @@
       </div>
 
       <!-- PERSON 2 -->
-      <div class="tcard reveal d2" id="team-card-2">
+      <div class="tcard reveal d2" id="team-card-2" style="display:none">
         <div class="tphoto">
-          <img src="images/team-2.jpg" loading="lazy" alt="Vorname Nachname" style="width:100%;height:100%;object-fit:cover;" onerror="document.getElementById('team-card-2').style.display='none'">
+          <img src="images/team-2.jpg" loading="lazy" alt="Vorname Nachname" style="width:100%;height:100%;object-fit:cover;"
+            onload="document.getElementById('team-card-2').style.display=''"
+            onerror="document.getElementById('team-card-2').style.display='none'">
         </div>
         <div class="tbody">
           <h3>VORNAME NAME</h3>
@@ -1276,21 +1278,6 @@
   </div>
 </section>
 
-<!-- FOOTER -->
-<footer>
-  <div class="fi">
-    <a href="#hero" class="flogo">
-      <img src="images/fulex-media-logo.png" alt="Fulex Media" style="height:36px;width:auto;display:block;" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'"/>
-      <span style="display:none">FULEX<span>.</span>MEDIA</span>
-    </a>
-    <ul class="flinks">
-      <li><a href="datenschutz.html">Datenschutz</a></li>
-      <li><a href="impressum.html">Impressum</a></li>
-      <li><a href="agb.html">AGB</a></li>
-    </ul>
-    <p class="fcopy">© 2026 Fulex Media. Alle Rechte vorbehalten.</p>
-  </div>
-</footer>
 
 <!-- VIRAL CTA -->
 <section id="viral">
@@ -1310,6 +1297,22 @@
     </a>
   </div>
 </section>
+<!-- FOOTER -->
+<footer>
+  <div class="fi">
+    <a href="#hero" class="flogo">
+      <img src="images/fulex-media-logo.png" alt="Fulex Media" style="height:36px;width:auto;display:block;" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'"/>
+      <span style="display:none">FULEX<span>.</span>MEDIA</span>
+    </a>
+    <ul class="flinks">
+      <li><a href="datenschutz.html">Datenschutz</a></li>
+      <li><a href="impressum.html">Impressum</a></li>
+      <li><a href="agb.html">AGB</a></li>
+    </ul>
+    <p class="fcopy">© 2026 Fulex Media. Alle Rechte vorbehalten.</p>
+  </div>
+</footer>
+
 
 
 <div id="cookie-banner" style="
