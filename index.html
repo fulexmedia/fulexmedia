@@ -4,7 +4,45 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Fulex Media – Social Media Agentur</title>
-  <meta name="description" content="Fulex Media – Deine Agentur für Social Media, Content Creation & Videoproduktion." />
+  <meta name="description" content="Fulex Media – Social Media Agentur aus Kiel. Videoproduktion, Content Creation, Instagram Reels, TikTok Ads & Branding. Mehr Reichweite, mehr Kunden." />
+  <meta name="keywords" content="Social Media Agentur Kiel, Content Creation, Videoproduktion Kiel, Instagram Reels, TikTok Agentur, Social Media Marketing, Branding Kiel" />
+  <meta name="author" content="Fulex Media" />
+  <meta name="robots" content="index, follow" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.fulex.media/" />
+  <meta property="og:title" content="Fulex Media – Social Media Agentur Kiel" />
+  <meta property="og:description" content="Mehr Reichweite. Mehr Kunden. Weniger Aufwand. Videoproduktion, Content Creation & Social Media Marketing aus Kiel." />
+  <meta property="og:image" content="https://www.fulex.media/images/fulex-media-logo.png" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Fulex Media – Social Media Agentur Kiel" />
+  <meta name="twitter:description" content="Mehr Reichweite. Mehr Kunden. Weniger Aufwand." />
+  <meta name="twitter:image" content="https://www.fulex.media/images/fulex-media-logo.png" />
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "Fulex Media",
+    "description": "Social Media Agentur aus Kiel – Videoproduktion, Content Creation, Instagram, TikTok & Branding.",
+    "url": "https://www.fulex.media",
+    "logo": "https://www.fulex.media/images/fulex-media-logo.png",
+    "telephone": "+4915128827962",
+    "email": "studio@fulex.media",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Kiel",
+      "addressRegion": "Schleswig-Holstein",
+      "addressCountry": "DE"
+    },
+    "areaServed": "Deutschland",
+    "serviceType": ["Social Media Marketing", "Videoproduktion", "Content Creation", "Branding", "Paid Ads"]
+  }
+  </script>
   <link rel="icon" type="image/png" href="images/fulex-media-logo.png" />
   <link rel="apple-touch-icon" href="images/fulex-media-logo.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -30,6 +68,13 @@
       --ff-b:    'Inter', sans-serif;
       --r:       12px;
       --rsm:     8px;
+    }
+
+    @supports (color: color(display-p3 0 0 0)) {
+      :root {
+        --accent: color(display-p3 0.73 0.94 0.18);
+        --adim:   color(display-p3 0.73 0.94 0.18 / 0.08);
+      }
     }
 
     /* ── If you have Benzin locally, swap the @font-face in here:
