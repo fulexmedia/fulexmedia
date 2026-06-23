@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Fulex Media – Social Media Agentur</title>
   <meta name="description" content="Fulex Media – Deine Agentur für Social Media, Content Creation & Videoproduktion." />
+  <link rel="icon" type="image/png" href="images/fulex-media-logo.png" />
+  <link rel="apple-touch-icon" href="images/fulex-media-logo.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
@@ -137,7 +139,18 @@
       transition: opacity .2s, transform .15s;
     }
     .navcta:hover { opacity: .85; transform: translateY(-1px); }
-    .burger {
+    .lang-toggle {
+      display: flex; align-items: center; gap: 6px;
+    }
+    .lang-btn {
+      background: none; border: none; cursor: pointer;
+      font-family: var(--ff-b); font-size: .75rem; font-weight: 600;
+      letter-spacing: .06em; color: var(--muted);
+      padding: 4px 2px; transition: color .2s;
+    }
+    .lang-btn.active { color: var(--accent); }
+    .lang-btn:hover { color: var(--text); }
+    @media (max-width: 860px) { .lang-toggle { display: none; } }
       display: none; flex-direction: column; gap: 5px;
       cursor: pointer; background: none; border: none; padding: 4px;
     }
@@ -746,6 +759,11 @@
     <li><a href="#referenzen">Referenzen</a></li>
   </ul>
   <a href="#kontakt" class="navcta">Kostenlos anfragen ↗</a>
+  <div class="lang-toggle">
+    <button class="lang-btn active" id="lang-de" onclick="setLang('de')">DE</button>
+    <span style="color:var(--muted2)">|</span>
+    <button class="lang-btn" id="lang-en" onclick="setLang('en')">EN</button>
+  </div>
   <button class="burger" id="burger" aria-label="Menü">
     <span></span><span></span><span></span>
   </button>
@@ -1106,7 +1124,7 @@
       <div class="acard reveal d4">
         <div class="aico"><svg width="18" height="18" fill="none" stroke="var(--accent)" stroke-width="2" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg></div>
         <h3>E-Commerce</h3>
-        <p>Du verkaufst online und willst Social als echten Vertriebskanal nutzen — mit Ads und organischem Content.</p>
+        <p>Online verkaufen und Social Media als echten Vertriebskanal nutzen — mit Ads und organischem Content.</p>
       </div>
     </div>
   </div>
@@ -1148,7 +1166,8 @@
             <option>Social Media Strategie</option>
             <option>Content Creation & Grafikdesign</option>
             <option>Logo & Corporate Identity</option>
-            <option>Paid Ads</option>
+            <option>Paid Social Media Ads</option>
+            <option>Sonstiges</option>
           </select>
           <textarea name="nachricht" placeholder="Kurz beschreiben, worum es geht…"></textarea>
           <button type="submit" class="fsub">Anfrage absenden <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
@@ -1369,7 +1388,148 @@
     }, 150);
   }
 
-  /* scroll reveal */
+  /* language toggle */
+  const translations = {
+    de: {
+      'nav-leistungen': 'Leistungen',
+      'nav-prozess': 'Prozess',
+      'nav-team': 'Team',
+      'nav-referenzen': 'Referenzen',
+      'nav-cta': 'Kostenlos anfragen ↗',
+      'hero-badge': 'Social Media Agentur — Kiel & Remote',
+      'hero-h1': 'CONTENT,\nDER WIRKLICH\nVERKAUFT.',
+      'hero-sub': 'Starker Content, der Aufmerksamkeit erzeugt — und Ergebnisse liefert.',
+      'hero-btn1': 'Kostenloses Erstgespräch',
+      'hero-btn2': 'Referenzen',
+      'leistungen-eyebrow': 'Leistungen',
+      'leistungen-h': 'Was wir machen',
+      'leistungen-sub': 'Von der Idee bis zum fertigen Post. Full-Service oder als Erweiterung eines bestehenden Teams.',
+      'prozess-eyebrow': 'Unser Prozess',
+      'prozess-h': 'So arbeiten wir zusammen',
+      'prozess-sub': 'Kein Chaos, keine unnötigen Meetings. Klarer Ablauf von Anfang an.',
+      'team-eyebrow': 'Das Team',
+      'team-h': 'Hinter der Kamera',
+      'team-sub': 'Kein anonymes Agentur-Konstrukt. Hinter jedem Projekt stehen echte Menschen mit echter Leidenschaft für Content.',
+      'ref-eyebrow': 'Referenzen',
+      'ref-h': 'Unsere Arbeit',
+      'ref-sub': 'Ein Ausschnitt aus unseren Projekten — von Imagefilmen bis zu viralen Reels.',
+      'fuer-eyebrow': 'Für wen',
+      'fuer-h': 'Für wen wir arbeiten',
+      'kontakt-eyebrow': 'Kontakt',
+      'kontakt-h': 'Jetzt Kontakt aufnehmen.',
+      'kontakt-sub': 'Einfach melden — wir antworten innerhalb von 24 Stunden. Unverbindlich und kostenlos.',
+      'form-select': 'Welche Leistung ist relevant?',
+      'form-submit': 'Anfrage absenden',
+      'viral-eyebrow': 'Bereit für den nächsten Schritt',
+      'viral-h': 'BEREIT\nVIRAL\nZU GEHEN?',
+      'viral-sub': 'Content der die Zielgruppe stoppt — und das Business wachsen lässt.',
+      'viral-btn': 'Jetzt kostenlos anfragen',
+    },
+    en: {
+      'nav-leistungen': 'Services',
+      'nav-prozess': 'Process',
+      'nav-team': 'Team',
+      'nav-referenzen': 'Work',
+      'nav-cta': 'Free consultation ↗',
+      'hero-badge': 'Social Media Agency — Kiel & Remote',
+      'hero-sub': 'Strong content that generates attention — and delivers results.',
+      'hero-btn1': 'Free Consultation',
+      'hero-btn2': 'Our Work',
+      'leistungen-eyebrow': 'Services',
+      'leistungen-h': 'What We Do',
+      'leistungen-sub': 'From idea to finished post. Full-service or as an extension of your existing team.',
+      'prozess-eyebrow': 'Our Process',
+      'prozess-h': 'How We Work Together',
+      'prozess-sub': 'No chaos, no unnecessary meetings. Clear process from day one.',
+      'team-eyebrow': 'The Team',
+      'team-h': 'Behind the Camera',
+      'team-sub': 'No anonymous agency construct. Real people with real passion for content behind every project.',
+      'ref-eyebrow': 'Work',
+      'ref-h': 'Our Projects',
+      'ref-sub': 'A selection of our projects — from brand films to viral reels.',
+      'fuer-eyebrow': 'Who We Work With',
+      'fuer-h': 'Who We Work With',
+      'kontakt-eyebrow': 'Contact',
+      'kontakt-h': 'Get in Touch.',
+      'kontakt-sub': 'Just reach out — we respond within 24 hours. No commitment, no cost.',
+      'form-select': 'Which service is relevant?',
+      'form-submit': 'Send Request',
+      'viral-eyebrow': 'Ready for the next step',
+      'viral-h': 'READY TO\nGO\nVIRAL?',
+      'viral-sub': 'Content that stops your audience — and grows your business.',
+      'viral-btn': 'Get started for free',
+    }
+  };
+
+  function setLang(lang) {
+    document.getElementById('lang-de').classList.toggle('active', lang === 'de');
+    document.getElementById('lang-en').classList.toggle('active', lang === 'en');
+    const t = translations[lang];
+
+    // Nav
+    const navLinks = document.querySelectorAll('.navlinks a');
+    const keys = ['nav-leistungen','nav-prozess','nav-team','nav-referenzen'];
+    navLinks.forEach((a, i) => { if (keys[i]) a.textContent = t[keys[i]]; });
+    document.querySelector('.navcta').textContent = t['nav-cta'];
+
+    // Hero badge
+    const badge = document.querySelector('.hero-ticker .ticker-label');
+    // hero sub
+    document.querySelector('.hero-sub').textContent = t['hero-sub'];
+    // buttons
+    const herobtns = document.querySelectorAll('.hero-acts a');
+    if (herobtns[0]) herobtns[0].childNodes[0].textContent = t['hero-btn1'] + ' ';
+    if (herobtns[1]) herobtns[1].textContent = t['hero-btn2'];
+
+    // Sections — eyebrow, heading, sub
+    const map = [
+      ['#leistungen .eyebrow', 'leistungen-eyebrow'],
+      ['#leistungen .sh',      'leistungen-h'],
+      ['#leistungen .sub',     'leistungen-sub'],
+      ['#prozess .eyebrow',    'prozess-eyebrow'],
+      ['#prozess .sh',         'prozess-h'],
+      ['#prozess .sub',        'prozess-sub'],
+      ['#team .eyebrow',       'team-eyebrow'],
+      ['#team .sh',            'team-h'],
+      ['#team .sub',           'team-sub'],
+      ['#referenzen .eyebrow', 'ref-eyebrow'],
+      ['#referenzen .sh',      'ref-h'],
+      ['#referenzen .sub',     'ref-sub'],
+      ['#fuerwen .eyebrow',    'fuer-eyebrow'],
+      ['#fuerwen .sh',         'fuer-h'],
+      ['#kontakt .eyebrow',    'kontakt-eyebrow'],
+      ['#kontakt .sh',         'kontakt-h'],
+      ['#kontakt .sub',        'kontakt-sub'],
+      ['.viral-eyebrow',       'viral-eyebrow'],
+      ['.viral-sub',           'viral-sub'],
+    ];
+    map.forEach(([sel, key]) => {
+      const el = document.querySelector(sel);
+      if (el && t[key]) el.textContent = t[key];
+    });
+
+    // Form
+    const sel = document.querySelector('select[name="leistung"] option[disabled]');
+    if (sel) sel.textContent = t['form-select'];
+    const sub = document.querySelector('.fsub');
+    if (sub) sub.childNodes[0].textContent = t['form-submit'] + ' ';
+
+    // Viral CTA btn
+    const vbtn = document.querySelector('#viral .btnp');
+    if (vbtn) vbtn.childNodes[0].textContent = t['viral-btn'] + ' ';
+
+    // Viral headline
+    const vh = document.querySelector('.viral-h');
+    if (vh && t['viral-h']) {
+      vh.innerHTML = t['viral-h'].split('\n').map((l,i) => i===1?`<em>${l}</em>`:l).join('<br/>');
+    }
+
+    localStorage.setItem('fulex-lang', lang);
+  }
+
+  // restore saved language
+  const savedLang = localStorage.getItem('fulex-lang');
+  if (savedLang === 'en') setLang('en');
   const obs = new IntersectionObserver(entries => {
     entries.forEach(e => {
       if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); }
