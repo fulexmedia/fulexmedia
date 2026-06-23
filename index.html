@@ -481,23 +481,53 @@
     }
     .reel-carousel-wrap::before,
     .reel-carousel-wrap::after {
-      content: ''; position: absolute; top: 0; bottom: 0; width: 80px; z-index: 2; pointer-events: none;
+      content: ''; position: absolute; top: 0; bottom: 0; width: 60px; z-index: 2; pointer-events: none;
     }
     .reel-carousel-wrap::before { left: 0; background: linear-gradient(to right, var(--bg), transparent); }
     .reel-carousel-wrap::after  { right: 0; background: linear-gradient(to left, var(--bg), transparent); }
+
+    /* Desktop — auto scroll */
     .reel-track {
-      min-width: 0;
       display: flex; gap: 16px;
-      animation: reelScroll 40s linear infinite;
       width: max-content;
+      animation: reelScroll 40s linear infinite;
+      cursor: grab;
+      user-select: none;
     }
+    .reel-track.paused { animation-play-state: paused; }
     .reel-track:hover { animation-play-state: paused; }
     @keyframes reelScroll {
       from { transform: translateX(0); }
       to   { transform: translateX(-50%); }
     }
-    .rcard {
-      flex-shrink: 0; width: 200px;
+
+    /* Mobile — swipeable, no auto scroll */
+    @media (max-width: 700px) {
+      .reel-carousel-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; scroll-snap-type: x mandatory; }
+      .reel-carousel-wrap::-webkit-scrollbar { display: none; }
+      .reel-track {
+        animation: none !important;
+        transform: none !important;
+        width: max-content;
+        padding: 0 1.5rem;
+        gap: 12px;
+      }
+      .rcard {
+        width: 160px;
+        scroll-snap-align: start;
+        flex-shrink: 0;
+      }
+      /* show only one set of videos on mobile */
+      .reel-track .rcard:nth-child(n+11) { display: none; }
+    }
+    .swipe-hint {
+      display: none;
+      text-align: center;
+      font-size: .72rem; color: var(--muted2);
+      margin-top: .75rem;
+      letter-spacing: .05em;
+    }
+    @media (max-width: 700px) { .swipe-hint { display: block; } }
       background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r);
       overflow: hidden; transition: border-color .25s, transform .25s;
       cursor: pointer;
@@ -999,7 +1029,7 @@
           </div>
         </div>
         <div class="tbody">
-          <h3>KASPAR BENTHE</h3>
+          <h3>VORNAME NAME</h3>
           <div class="trole">Gründer &amp; Creative Director</div>
           <p>Ich brenne für visuelles Storytelling. Mit der Kamera aufgewachsen, weiß ich wie man Marken so in Szene setzt, dass Menschen wirklich hinschauen — und bleiben.</p>
           <div class="tsoc">
@@ -1019,7 +1049,7 @@
           <img src="images/team-2.jpg" loading="lazy" alt="Vorname Nachname" style="width:100%;height:100%;object-fit:cover;" onerror="document.getElementById('team-card-2').style.display='none'">
         </div>
         <div class="tbody">
-          <h3>VORNAME NAME</h3>
+          <h3>KASPAR BENTHE</h3>
           <div class="trole">Strategie &amp; Social Media</div>
           <p>Zahlen, Trends und Plattform-Algorithmen sind meine Welt. Ich sorge dafür, dass großartiger Content auch die richtigen Menschen erreicht und echte Ergebnisse liefert.</p>
           <div class="tsoc">
@@ -1084,10 +1114,9 @@
       <div class="rcard"><div class="rvid"><video playsinline autoplay muted loop preload="none" src="videos/reel-9.mp4" autoplay muted loop playsinline></video></div><div class="rbody"><h4>Social Ad</h4><p>Paid Social</p></div></div>
       <div class="rcard"><div class="rvid"><video playsinline autoplay muted loop preload="none" src="videos/reel-10.mp4" autoplay muted loop playsinline></video></div><div class="rbody"><h4>Testimonial</h4><p>Content Creation</p></div></div>
     </div>
+    <p class="swipe-hint">← swipe →</p>
   </div>
 </section>
-
-<!-- FÜR WEN -->
 <section id="fuerwen">
   <div class="wrap">
     <p class="eyebrow reveal">Für wen</p>
@@ -1410,6 +1439,27 @@
         kBtn.innerHTML = 'Fehler — bitte direkt per E-Mail melden';
         kBtn.disabled = false;
       }
+    });
+  }
+
+  /* reel carousel — desktop drag to scroll */
+  const reelWrap = document.querySelector('.reel-carousel-wrap');
+  const reelTrack = document.getElementById('reel-track');
+  if (reelWrap && reelTrack && window.innerWidth > 700) {
+    let isDragging = false, startX = 0, scrollLeft = 0;
+    reelWrap.addEventListener('mousedown', e => {
+      isDragging = true; startX = e.pageX;
+      scrollLeft = reelWrap.scrollLeft;
+      reelTrack.classList.add('paused');
+    });
+    window.addEventListener('mouseup', () => {
+      isDragging = false;
+      reelTrack.classList.remove('paused');
+    });
+    reelWrap.addEventListener('mousemove', e => {
+      if (!isDragging) return;
+      e.preventDefault();
+      reelWrap.scrollLeft = scrollLeft - (e.pageX - startX);
     });
   }
 
